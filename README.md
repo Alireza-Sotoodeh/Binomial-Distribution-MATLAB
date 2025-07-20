@@ -1,6 +1,12 @@
 # 📊 Binomial Distribution – MATLAB Simulation
 
 A MATLAB-based academic project that explores the **Binomial Distribution** and its approximation by **Normal (Gaussian)** and **Poisson** distributions through statistical analysis and simulation.
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Binomial_Distribution.svg/960px-Binomial_Distribution.svg.png" alt="Binomial Distribution" width="500"/>
+  <br/>
+  <em>Figure 1 – Binomial Distribution with p = 0.5 and varying n</em>
+</p>
+
 
 ---
 
@@ -10,9 +16,12 @@ The **Binomial Distribution** is a **discrete probability distribution** that mo
 
 ### 🔢 Formula
 
-\[
-P(X = k) = \binom{n}{k} \cdot p^k \cdot (1 - p)^{n-k}
-\]
+<p align="center">
+  <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/9ad3f324ca5778bd1cae96fed07ce09063a71a1b" alt="Binomial PMF Formula" width="300"/>
+  <br/>
+  <em>Figure – Binomial Probability Formula</em>
+</p>
+
 
 Where:
 - \( n \): number of trials
