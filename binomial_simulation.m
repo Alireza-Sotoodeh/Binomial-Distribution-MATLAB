@@ -1,70 +1,91 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Binomial Distribution Approximation – MATLAB Simulation
-%
-% Description:
-% This program compares the Binomial Distribution to its approximations:
-%   - Normal (Gaussian) distribution
-%   - Poisson distribution
-%
-% Author: Dr. Amir Zaimbashi
-% Edited by: Alireza Sotoodeh (Student ID: 401412056)
-% University: Shahid Bahonar University of Kerman, Iran
-% Email: a.zaimbashi@uk.ac.ir
-%
-% Date: Spring 1403
-%
-% Note:
-% - Code uses vectorization for performance.
-% - Change 'n' and 'p' to test different scenarios.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function binomial_simulation()
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Binomial Distribution: Approximation by Normal and Poisson
+    % Author: Dr. Amir Zaimbashi
+    % Edited by: Alireza Sotoodeh
+    % University: Shahid Bahonar University of Kerman
+    % Email: a.zaimbashi@uk.ac.ir
+    %
+    % Description:
+    % - Computes and compares Binomial, Poisson, and Gaussian distributions.
+    % - Accepts user-defined parameters n and p.
+    % - Plots and exports results.
+    %
+    % References:
+    % - Wikipedia: https://en.wikipedia.org/wiki/Binomial_distribution
+    % - Statistics for Engineers, Montgomery & Runger
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear all; clc; close all;
+    %% USER INPUT WITH VALIDATION
+    prompt = 'Enter number of trials (n): ';
+    n = input(prompt);
+    if ~isscalar(n) || n <= 0 || floor(n) ~= n
+        error('n must be a positive integer.');
+    end
 
-% ----------------------------
-% PARAMETERS
-% ----------------------------
-n = 100;        % Number of independent trials
-p = 0.4;        % Probability of success
-q = 1 - p;      % Probability of failure
-s = n * p * q;  % Variance of Binomial distribution
-mu = n * p;     % Mean (expected value)
-k = 0:n;        % Range of discrete values
+    prompt = 'Enter probability of success (p): ';
+    p = input(prompt);
+    if ~isscalar(p) || p < 0 || p > 1
+        error('p must be a value between 0 and 1.');
+    end
 
-% ----------------------------
-% BINOMIAL DISTRIBUTION
-% ----------------------------
-% Vectorized binomial PMF using log factorial to avoid overflow
-p2 = arrayfun(@(u) exp(gammaln(n+1) - gammaln(u+1) - gammaln(n-u+1) + ...
-              u*log(p) + (n-u)*log(1 - p)), k);
+    q = 1 - p;
+    mu = n * p;
+    sigma2 = n * p * q;  % Variance
+    k = 0:n;
 
-% ----------------------------
-% POISSON APPROXIMATION
-% ----------------------------
-po = arrayfun(@(u) exp(-mu) * (mu^u / factorial(u)), k);
+    %% COMPUTE DISTRIBUTIONS
+    binomial = compute_binomial(n, p, k);
+    poisson  = compute_poisson(mu, k);
+    gaussian = compute_gaussian(mu, sigma2, k);
 
-% ----------------------------
-% NORMAL (GAUSSIAN) APPROXIMATION
-% ----------------------------
-f = (1 / sqrt(2 * pi * s)) * exp(-((k - mu).^2) / (2 * s));
+    %% PLOT RESULTS
+    plot_results(k, binomial, poisson, gaussian, mu, sigma2, n, p);
 
-% ----------------------------
-% PLOTTING
-% ----------------------------
-figure('Color', 'w');
+    %% SAVE DATA
+    T = table(k', binomial', poisson', gaussian', ...
+        'VariableNames', {'k', 'Binomial', 'Poisson', 'Gaussian'});
+    writetable(T, 'distribution_data.csv');
+    disp('Results saved to distribution_data.csv');
+end
 
-stem(k, p2, 'filled', 'DisplayName', 'Binomial'); hold on;
-stem(k, po, ':', 'DisplayName', 'Poisson');
-plot(k, f, 'LineWidth', 1.5, 'DisplayName', 'Gaussian');
+%% FUNCTION DEFINITIONS
 
-% Mark ±3σ range
-plot(n*p - 3*sqrt(s) * ones(1,10), linspace(0, max(f), 10), 'r--');
-plot(n*p + 3*sqrt(s) * ones(1,10), linspace(0, max(f), 10), 'r--');
+function p_b = compute_binomial(n, p, k)
+    % Vectorized binomial PMF
+    log_coeff = gammaln(n+1) - gammaln(k+1) - gammaln(n-k+1);
+    p_b = exp(log_coeff + k .* log(p) + (n - k) .* log(1 - p));
+end
 
-% ----------------------------
-% AXES & LABELS
-% ----------------------------
-legend('Interpreter','latex', 'FontSize', 10, 'Location', 'northeast');
-xlabel('$k$ (Number of Successes)', 'Interpreter','latex', 'FontSize', 12);
-ylabel('Probability Density', 'Interpreter','latex', 'FontSize', 12);
-title('Binomial Distribution and Its Approximations', 'FontSize', 14);
-grid on;
+function p_p = compute_poisson(mu, k)
+    % Poisson approximation to Binomial
+    p_p = exp(-mu) .* (mu .^ k) ./ factorial(k);
+end
+
+function p_g = compute_gaussian(mu, var, k)
+    % Normal approximation to Binomial
+    p_g = (1 ./ sqrt(2 * pi * var)) .* exp(-((k - mu).^2) ./ (2 * var));
+end
+
+function plot_results(k, p_b, p_p, p_g, mu, var, n, p)
+    figure('Color','w','Position',[100 100 800 500]);
+    hold on;
+    stem(k, p_b, 'filled', 'DisplayName','Binomial', 'Color',[0.2 0.2 1]);
+    stem(k, p_p, ':', 'DisplayName','Poisson', 'Color',[1 0.5 0]);
+    plot(k, p_g, 'LineWidth', 2, 'DisplayName','Gaussian', 'Color','green');
+
+    % ±3σ lines
+    xline(mu - 3 * sqrt(var), 'r--', 'LineWidth', 1.2, 'DisplayName', '-3σ');
+    xline(mu + 3 * sqrt(var), 'r--', 'LineWidth', 1.2, 'DisplayName', '+3σ');
+
+    title(['Binomial Approximation | n = ' num2str(n) ', p = ' num2str(p)]);
+    xlabel('k (number of successes)', 'Interpreter','latex');
+    ylabel('Probability', 'Interpreter','latex');
+    legend('Location','northeast');
+    grid on;
+    hold off;
+
+    % Save figure
+    saveas(gcf, 'distribution_plot.png');
+    disp('Plot saved to distribution_plot.png');
+end
