@@ -68,10 +68,22 @@ Includes visual validation using multiple test cases.
    ```matlab
    binomial_simulation.m
 
+---
+
+### 📚 Read More
+
+For more theoretical background and mathematical derivations of the Binomial Distribution, visit the full article on [Wikipedia – Binomial Distribution](https://en.wikipedia.org/wiki/Binomial_distribution).
+
+> The page includes properties, formulas, historical context, real-world applications, and relations to other distributions like Poisson and Normal.
+
+---
+
 ## 🧑‍🏫 Authors & Credits
 - ✍️ Alireza Sotoodeh
 - Shahid Bahonar University of Kerman
 - 🎓 Supervisor: Dr. Amir Zaimbashi
+
+---
 
 ## 📜 License
 This project is intended for academic and educational use. Please cite the authors if reusing.
