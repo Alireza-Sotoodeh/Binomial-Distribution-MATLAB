@@ -62,6 +62,40 @@ Includes visual validation using multiple test cases.
 
 ---
 
+## Version Differences
+
+This repository contains three versions of the Binomial Distribution MATLAB project, each with distinct features and improvements. Below is a summary of the differences between the versions:
+
+### Version 1.0
+- **Initial Release**: Implements the core functionality for calculating and visualizing the binomial distribution.
+- **Features**:
+  - Computes the probability mass function (PMF) and cumulative distribution function (CDF) for a binomial distribution using MATLAB’s built-in functions (`binopdf` and `binocdf`).
+  - Basic visualization of the PMF and CDF using bar plots and line graphs.
+  - Supports user-defined parameters for the number of trials (`n`) and probability of success (`p`).
+- **Limitations**: Limited error handling and basic user interface; suitable for simple binomial distribution analysis.
+
+### Version 2.0
+- **Enhanced Functionality**: Builds upon Version 1.0 with additional features and improved usability.
+- **Features**:
+  - Adds support for generating random samples from the binomial distribution using `binornd`.
+  - Introduces a graphical user interface (GUI) for interactive parameter input and real-time visualization.
+  - Includes error checking for invalid inputs (e.g., `p` outside [0,1] or non-integer `n`).
+  - Provides options to export results and plots to various file formats (e.g., CSV, PNG).
+- **Improvements**: Better code organization with modular functions and improved documentation.
+
+### Version 3.0
+- **Advanced Features and Optimization**: Focuses on performance improvements and advanced statistical analysis.
+- **Features**:
+  - Optimizes computation for large `n` values using vectorized operations and approximation methods (e.g., normal approximation for large `n`).
+  - Adds statistical analysis tools, such as confidence intervals and hypothesis testing for binomial proportions.
+  - Supports batch processing for multiple parameter sets, enabling comparative analysis.
+  - Includes detailed documentation and example scripts for educational purposes.
+- **Improvements**: Enhanced performance, expanded functionality, and better integration with MATLAB toolboxes for statistical analysis.
+
+For detailed usage instructions and examples for each version, refer to the respective version folders in the repository.
+
+---
+
 ## 🛠️ How to Run
 
 1. Open MATLAB and run the script:
